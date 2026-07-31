@@ -1,39 +1,31 @@
-import React from "react";
+import React, { useState } from 'react';
 
-const container: React.CSSProperties = { padding: 20, maxWidth: 820, margin: "24px auto", color: "#fff" };
-const card: React.CSSProperties = { background: "rgba(8,6,28,0.85)", padding: 16, borderRadius: 12 };
+const wrapper: React.CSSProperties = { maxWidth:900, margin:'24px auto', padding:20 };
+const card: React.CSSProperties = { background:'rgba(8,6,28,0.82)', padding:16, borderRadius:12, color:'#fff' };
 
-export default function Goals() {
+export default function Goals(){
+  const [goals,setGoals] = useState<string[]>([]);
+  const [text,setText] = useState('');
+  const add = ()=>{ if(!text.trim()) return; setGoals(g=>[...g,{...[] as any, 0:0}]); setGoals(g=>[...g,text.trim()]); setText(''); };
+  const remove = (i:number)=>setGoals(g=>g.filter((_,idx)=>idx!==i));
   return (
-    <div style={container}>
-      <h1 style={{ margin: 0, fontSize: 26 }}>Goals</h1>
-      <p style={{ color: "rgba(255,255,255,0.6)", marginTop: 8 }}>Manage your aspirational and actionable goals. Add milestones, deadlines and track progress.</p>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 18 }}>
-        <div style={card}>
-          <h3 style={{ marginTop: 0 }}>Create Goal</h3>
-          <input placeholder="New goal title" style={{ width: "100%", padding: 10, borderRadius: 8, border: "1px solid rgba(255,255,255,0.06)", background: "transparent", color: "#fff" }} />
-          <div style={{ marginTop: 10, display: "flex", gap: 8 }}>
-            <button style={{ padding: "8px 12px", borderRadius: 8, background: "#F59E0B", border: "none" }}>Add</button>
-            <button style={{ padding: "8px 12px", borderRadius: 8, background: "transparent", border: "1px solid rgba(255,255,255,0.06)", color: "#fff" }}>Cancel</button>
-          </div>
+    <div style={wrapper}>
+      <h1>Goals</h1>
+      <div style={card}>
+        <p style={{opacity:0.8}}>Create and manage your goals. These are stored in-memory; adapt to your data store (localStorage, backend) as needed.</p>
+        <div style={{display:'flex',gap:8,marginTop:12}}>
+          <input value={text} onChange={e=>setText(e.target.value)} placeholder="New goal" style={{flex:1,padding:10,borderRadius:8}} />
+          <button onClick={add} style={{padding:'10px 14px',borderRadius:8}}>Add</button>
         </div>
-
-        <div style={card}>
-          <h3 style={{ marginTop: 0 }}>Active Goals</h3>
-          <ol style={{ color: "rgba(255,255,255,0.85)" }}>
-            <li>Launch landing page</li>
-            <li>Build weekly habit routine</li>
-            <li>Finish design system</li>
-          </ol>
-        </div>
-      </div>
-
-      <div style={{ marginTop: 16 }}>
-        <div style={card}>
-          <h3 style={{ marginTop: 0 }}>Completed</h3>
-          <p style={{ color: "rgba(255,255,255,0.6)" }}>No completed goals yet. Celebrate your first win!</p>
-        </div>
+        <ul style={{marginTop:12}}>
+          {goals.length===0 && <li style={{opacity:0.7}}>No goals — add your first one!</li>}
+          {goals.map((g,idx)=>(
+            <li key={idx} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'8px 0',borderBottom:'1px dashed rgba(255,255,255,0.03)'}}>
+              <span>{g}</span>
+              <button onClick={()=>remove(idx)} style={{background:'transparent',border:'none',color:'#F59E0B',cursor:'pointer'}}>Remove</button>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
